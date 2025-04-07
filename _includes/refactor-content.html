@@ -189,8 +189,9 @@
       {% else %}
         {% assign _lang = _left | split: 'language-' | last | split: ' ' | first %}
 
-        {% **if _lang == 'plaintext' %**  <!-- Added this condition -->
-          {% **assign _label_text = 'Cisco iOS' %}**  <!-- Set label to empty string for plaintext -->
+        {% comment %} Added this condition {% endcomment %}
+        {% if _lang == 'plaintext' %}
+          {% assign _label_text = 'Cisco iOS' %}  <!-- Set label to empty string for plaintext -->
         {% else %}
           {% capture _label_text %}{% include language-alias.html language=_lang %}{% endcapture %}  
         {% endif %}
@@ -212,7 +213,7 @@
         | append: _label
         | append: '<button aria-label="copy" data-title-succeed="'
         | append: site.data.locales[include.lang].post.button.copy_code.succeed
-        | append: '"><i class="far fa-clipboard"></i></button></div>'
+        | append: '"><i class="far fa-clipboard"></i></button></div>' 
         | append: '<div class="highlight"><code>'
       %}
     {% endif %}
@@ -220,6 +221,7 @@
 
   {% assign _content = _new_content %}
 {% endif %}
+
 
 
 <!-- Create heading anchors -->
