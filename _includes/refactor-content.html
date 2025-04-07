@@ -173,7 +173,6 @@
 {% endif %}
 
 <!-- Add header for code snippets -->
-
 {% if _content contains '<div class="highlight"><code>' %}
   {% assign _code_spippets = _content | split: '<div class="highlight"><code>' %}
   {% assign _new_content = '' %}
@@ -181,7 +180,6 @@
   {% for _snippet in _code_spippets %}
     {% if forloop.last %}
       {% assign _new_content = _new_content | append: _snippet %}
-
     {% else %}
       {% assign _left = _snippet | split: '><' | last %}
 
@@ -190,13 +188,23 @@
         {% assign _label_icon = 'far fa-file-code fa-fw' %}
       {% else %}
         {% assign _lang = _left | split: 'language-' | last | split: ' ' | first %}
-        {% capture _label_text %}{% include language-alias.html language=_lang %}{% endcapture %}
+
+        {% **if _lang == 'plaintext' %**  <!-- Added this condition -->
+          {% **assign _label_text = 'Cisco iOS' %}**  <!-- Set label to empty string for plaintext -->
+        {% else %}
+          {% capture _label_text %}{% include language-alias.html language=_lang %}{% endcapture %}  
+        {% endif %}
+
         {% assign _label_icon = 'fas fa-code fa-fw small' %}
       {% endif %}
 
-      {% capture _label %}
-        <span data-label-text="{{ _label_text | strip }}"><i class="{{ _label_icon }}"></i></span>
-      {% endcapture %}
+      {% if _label_text != '' %}
+        {% capture _label %}
+          <span data-label-text="{{ _label_text | strip }}"><i class="{{ _label_icon }}"></i></span>
+        {% endcapture %}
+      {% else %}
+        {% assign _label = '' %}
+      {% endif %}
 
       {% assign _new_content = _new_content
         | append: _snippet
@@ -212,6 +220,7 @@
 
   {% assign _content = _new_content %}
 {% endif %}
+
 
 <!-- Create heading anchors -->
 
